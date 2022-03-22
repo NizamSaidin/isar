@@ -11,6 +11,7 @@ dependencies:
   isar:
     git: # temporary fix until we migrate to flutter 2.10
       url: https://github.com/NizamSaidin/isar.git
+      ref: main
       path: packages/isar
   build: ^2.2.1
   source_gen: ^1.2.1

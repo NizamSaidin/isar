@@ -8,7 +8,10 @@ environment:
   sdk: ">=2.14.0 <3.0.0"
 
 dependencies:
-  isar: 2.2.1
+  isar:
+    git: # temporary fix until we migrate to flutter 2.10
+      url: https://github.com/NizamSaidin/isar.git
+      path: packages/isar
   build: ^2.2.1
   source_gen: ^1.2.1
   analyzer: ^3.0.0

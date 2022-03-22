@@ -94,7 +94,9 @@ Future<List<Map<String, dynamic>>> _executeQuery(Map<String, String> params) {
 StreamSubscription? _watchSubscription;
 
 Future<String> _watchQuery(Map<String, String> params) async {
-  unawaited(_watchSubscription?.cancel());
+  if (_watchSubscription != null) {
+    unawaited(_watchSubscription!.cancel());
+  }
   _watchSubscription = null;
   if (params['filter'] == null) return 'ok';
 
@@ -111,22 +113,16 @@ Future<String> _watchQuery(Map<String, String> params) async {
 Query _getQuery(Map<String, String> params) {
   final instanceName = params['instance'] as String;
   final collectionName = params['collection'] as String;
-  final collection =
-      Isar.getInstance(instanceName)!.getCollection(collectionName);
+  final collection = Isar.getInstance(instanceName)!.getCollection(collectionName);
   final offset = int.tryParse(params['offset'] ?? '');
   final limit = int.tryParse(params['limit'] ?? '');
   final sortProperty = params['sortProperty'];
   final sort = Sort.values[int.parse(params['sort'] ?? '0')];
   final filterJson = jsonDecode(params['filter']!);
   final filter = _parseFilter(filterJson);
-  return collection.buildQuery(
-      filter: FilterGroup.or([filter]),
-      offset: offset,
-      limit: limit,
-      sortBy: [
-        if (sortProperty != null)
-          SortProperty(property: sortProperty, sort: sort),
-      ]);
+  return collection.buildQuery(filter: FilterGroup.or([filter]), offset: offset, limit: limit, sortBy: [
+    if (sortProperty != null) SortProperty(property: sortProperty, sort: sort),
+  ]);
 }
 
 FilterOperation _parseFilter(Map<String, dynamic> json) {
